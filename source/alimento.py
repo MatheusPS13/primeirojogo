@@ -12,8 +12,8 @@ class Alimento:
         self.screen = screen
         self.wwidth = screen.get_width()
         self.wheight = screen.get_height()
-        self.x = random.randint(5,self.wwidth-5)
-        self.y = random.randint(5,self.wheight-5)
+        self.x = random.randint(10,self.wwidth-10)
+        self.y = random.randint(10,self.wheight-10)
 
 
     def desenhar(self):

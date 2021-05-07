@@ -49,8 +49,11 @@ def main():
 
         screen.blit(fundo, [0, 0])
         desenha_alimentos(alims)
-        c.desenhar()
 
+        c.desenhar()
+        #c.desenhar_linha((50,50), (250,50), 0)
+
+        c.detecta_alimento(alims)
 
         pygame.time.wait(vel_jogo)
 
