@@ -21,7 +21,7 @@ def desenha_alimentos(alims):
 def main():
     pygame.init()
 
-    logo = pygame.image.load(pasta_imagens+"cabeca.png")
+    logo = pygame.image.load(pasta_imagens+"cabeca_d.png")
     pygame.display.set_icon(logo)
     pygame.display.set_caption("Jogo da Cobrinha")
 
