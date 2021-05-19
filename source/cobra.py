@@ -34,58 +34,68 @@ class Cobra:
         self.wwidth = screen.get_width()
         self.wheight = screen.get_height()
         self.trajeto = [(self.x,self.y)]
+        self.corpo = []
 
     def distancia(self,x,y):
         dir = ((y[0]-x[0])*1.0,(y[1]-x[1])*1.0)
         td = math.sqrt(dir[0]**2+dir[1]**2)
         return td
 
-    def desenhar_linha(self, x, y, desenhar):
+    def desenhar_linha(self, x, y, desenhado):
         dir = ((y[0] - x[0])*1.0, (y[1] - x[1])*1.0)
         td = math.sqrt(dir[0] ** 2 + dir[1] ** 2)
         desenho_somado = 0
+        if desenhado >= self.tamanho:
+            return desenhado
         if td > 0:
             dir = (dir[0]/td,dir[1]/td)
             xa, ya = x[0], x[1]
             while self.distancia((xa,ya), y)>self.dd:
-                pygame.draw.circle(self.screen, self.cor_corpo, (xa, ya), self.raio_corpo)
+                if desenho_somado+desenhado >= self.tamanho:
+                    break
+                self.corpo += [(xa+1.4*self.raio_corpo, ya+1.4*self.raio_corpo)]
+                #pygame.draw.circle(self.screen, self.cor_corpo, (xa+1.4*self.raio_corpo, ya+1.4*self.raio_corpo), self.raio_corpo)
                 xa += dir[0]*self.dd
                 ya += dir[1]*self.dd
                 desenho_somado += self.dd
 
-                if desenho_somado >= desenhar:
-                    break
-
-        return desenho_somado
+        return desenho_somado+desenhado
 
     def desenhar_corpo(self):
 
-        if len(self.trajeto) < 2:
-            x = self.x, self.y
-        else:
-            x = self.trajeto[-2]
-        if len(self.trajeto) <1:
-            y = self.x, self.y
-        else:
-            y = self.trajeto[-1]
-        self.desenhar_linha(x, y, 0)
+        for p in self.corpo:
+            pygame.draw.circle(self.screen, self.cor_corpo, p, self.raio_corpo)
 
+    def pescoco(self,desenhado):
+        return self.desenhar_linha((self.x,self.y),self.trajeto[-1],desenhado)
 
-    def desenhar_trajeto(self):
+    def desenhar_trajeto(self,desenhado):
 
-        desenhado = 0
+        desenhado_a = desenhado
         trajeto_imprimir = self.trajeto[::-1]
         for i,p in enumerate(trajeto_imprimir[:-1]):
             po = trajeto_imprimir[i+1]
-            desenhado += self.desenhar_linha(p,po,300)
-            if desenhado > self.tamanho*self.acrescimo:
+            desenhado_a += self.desenhar_linha(p,po,desenhado_a)
+            if desenhado_a > self.tamanho:
                 break
-            print(p,po)
+        return desenhado_a
+
+    def testa_colide(self):
+        for c in self.corpo:
+            td = self.distancia((self.x,self.y),c)
+            if td < self.raio_corpo*0.4:
+                print('Game over!')
+
 
     def desenhar(self):
 
-        #self.desenhar_corpo()
-        self.desenhar_trajeto()
+        self.corpo = []
+        des = self.pescoco(0)
+        des = self.desenhar_trajeto(des)
+        self.desenhar_corpo()
+
+        self.testa_colide()
+
 
         if self.vx>0:
             if self.vxa <0 :
@@ -166,4 +176,4 @@ class Cobra:
             d = math.sqrt(d)
             if d<15:
                 del(alimentos[i])
-                self.tamanho += 1
+                self.tamanho += self.acrescimo

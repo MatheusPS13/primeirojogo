@@ -28,7 +28,7 @@ def main():
     screen = pygame.display.set_mode(size_screen)
     alims = cria_alimentos(screen, 5)
 
-    #clock = pygame.time.clock()
+
     fundo = pygame.image.load(pasta_imagens+"fundo.png")
     screen.blit(fundo,[0,0])
 
@@ -51,7 +51,6 @@ def main():
         desenha_alimentos(alims)
 
         c.desenhar()
-        #c.desenhar_linha((50,50), (250,50), 0)
 
         c.detecta_alimento(alims)
 
